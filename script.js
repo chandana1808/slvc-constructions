@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Contact Form Handling
+// Contact Form Handling with Formspree
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
     contactForm.addEventListener('submit', async function(e) {
@@ -79,8 +79,8 @@ if (contactForm) {
         submitBtn.disabled = true;
         
         try {
-            // Send to backend
-            const response = await fetch('/api/contact', {
+            // Send to Formspree
+            const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,13 +88,11 @@ if (contactForm) {
                 body: JSON.stringify(data)
             });
             
-            const result = await response.json();
-            
-            if (result.success) {
-                showNotification(result.message, 'success');
+            if (response.ok) {
+                showNotification('Thank you! Your message has been sent successfully. We\'ll get back to you soon.', 'success');
                 this.reset();
             } else {
-                showNotification(result.message, 'error');
+                showNotification('Sorry, there was an error sending your message. Please try again.', 'error');
             }
         } catch (error) {
             console.error('Form submission error:', error);
@@ -360,4 +358,174 @@ function createScrollProgress() {
 }
 
 // Initialize scroll progress
-document.addEventListener('DOMContentLoaded', createScrollProgress); 
+document.addEventListener('DOMContentLoaded', createScrollProgress);
+
+// Dynamic content loading (for future use)
+function loadDynamicContent() {
+    // This function can be used to load content dynamically
+    // For example, loading projects from a database
+    console.log('Dynamic content loading ready');
+}
+
+// Initialize dynamic features
+document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicContent();
+    
+    // Add smooth transitions to all interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .service-card, .project-card');
+    interactiveElements.forEach(el => {
+        el.style.transition = 'all 0.3s ease';
+    });
+});
+
+// Add typing effect to hero title
+function typeWriter(element, text, speed = 100) {
+    let i = 0;
+    element.innerHTML = '';
+    
+    function type() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    
+    type();
+}
+
+// Initialize typing effect when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        const originalText = heroTitle.textContent;
+        typeWriter(heroTitle, originalText, 50);
+    }
+});
+
+// Add dynamic project filtering
+function filterProjects(category) {
+    const projects = document.querySelectorAll('.project-card');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    // Update active button
+    filterBtns.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.filter === category) {
+            btn.classList.add('active');
+        }
+    });
+    
+    projects.forEach(project => {
+        const projectType = project.querySelector('.project-type').textContent.toLowerCase();
+        
+        if (category === 'all' || projectType === category) {
+            project.style.display = 'block';
+            project.style.animation = 'fadeIn 0.5s ease';
+        } else {
+            project.style.display = 'none';
+        }
+    });
+}
+
+// Initialize project filtering
+document.addEventListener('DOMContentLoaded', () => {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const category = btn.dataset.filter;
+            filterProjects(category);
+        });
+    });
+});
+
+// Add CSS for fadeIn animation
+const fadeInStyle = document.createElement('style');
+fadeInStyle.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+`;
+document.head.appendChild(fadeInStyle);
+
+// Live Chat Widget Functions
+function toggleChat() {
+    const chatContainer = document.getElementById('chatContainer');
+    const chatBadge = document.querySelector('.chat-badge');
+    
+    chatContainer.classList.toggle('active');
+    
+    // Hide badge when chat is open
+    if (chatContainer.classList.contains('active')) {
+        chatBadge.style.display = 'none';
+    }
+}
+
+function sendChatMessage() {
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+    const message = chatInput.value.trim();
+    
+    if (message) {
+        // Add user message
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message user';
+        userMessage.innerHTML = `<p>${message}</p>`;
+        chatMessages.appendChild(userMessage);
+        
+        // Clear input
+        chatInput.value = '';
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Simulate bot response
+        setTimeout(() => {
+            const botResponse = getBotResponse(message);
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message bot';
+            botMessage.innerHTML = `<p>${botResponse}</p>`;
+            chatMessages.appendChild(botMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+    }
+}
+
+function handleChatKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendChatMessage();
+    }
+}
+
+function getBotResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+        return 'Hello! How can we help you with your construction project today?';
+    } else if (lowerMessage.includes('quote') || lowerMessage.includes('price')) {
+        return 'I\'d be happy to help you get a quote! Please fill out our contact form or call us at +1 (555) 123-4567 for a free consultation.';
+    } else if (lowerMessage.includes('residential') || lowerMessage.includes('home')) {
+        return 'We specialize in residential construction! From custom homes to renovations, we\'ve completed over 50 residential projects. Would you like to see some examples?';
+    } else if (lowerMessage.includes('commercial') || lowerMessage.includes('office')) {
+        return 'Our commercial construction services include office buildings, retail spaces, and industrial facilities. We\'ve successfully delivered 30+ commercial projects.';
+    } else if (lowerMessage.includes('contact') || lowerMessage.includes('call')) {
+        return 'You can reach us at +1 (555) 123-4567 or email us at info@slvcconstructions.com. Our office is located at 123 Construction Ave, City, State 12345.';
+    } else if (lowerMessage.includes('experience') || lowerMessage.includes('years')) {
+        return 'We have over 15 years of experience in the construction industry and have completed 150+ projects successfully. Our team of 50+ professionals ensures quality delivery.';
+    } else {
+        return 'Thank you for your message! Our team will get back to you shortly. In the meantime, feel free to explore our projects or contact us directly.';
+    }
+}
+
+// Initialize chat widget
+document.addEventListener('DOMContentLoaded', () => {
+    // Hide chat badge after 5 seconds
+    setTimeout(() => {
+        const chatBadge = document.querySelector('.chat-badge');
+        if (chatBadge) {
+            chatBadge.style.display = 'none';
+        }
+    }, 5000);
+}); 
