@@ -1,0 +1,27 @@
+{
+  "name": "slvc-constructions-website",
+  "version": "1.0.0",
+  "description": "SLVC Constructions - Professional Construction Company Website",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000",
+    "build": "echo 'Build complete'",
+    "deploy": "echo 'Deploy to hosting platform'"
+  },
+  "keywords": [
+    "construction",
+    "website",
+    "slvc",
+    "responsive",
+    "modern"
+  ],
+  "author": "SLVC Constructions",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/slvc-constructions.git"
+  }
+} 
